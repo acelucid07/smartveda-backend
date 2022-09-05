@@ -22,7 +22,6 @@ module.exports.otpsignup = (req, res, next) => {
           upperCaseAlphabets: false,
           specialChars: false,
         });
-        console.log(OTP);
         User.findByIdAndUpdate(user._id, { otp: OTP }, { new: true })
           .then((data) => {
             res.status(200).json({
@@ -34,34 +33,7 @@ module.exports.otpsignup = (req, res, next) => {
             console.log(err);
           });
       } else {
-        const OTP = otpGenerator.generate(4, {
-          digits: true,
-          lowerCaseAlphabets: false,
-          upperCaseAlphabets: false,
-          specialChars: false,
-        });
-        console.log(OTP);
-        /*  to send otp as a sms use local sms gateway {
-
-        } */
-
-        const user = new User({
-          phone: phone,
-          otp: OTP,
-          source: "OTP",
-        });
-        const token = jwt.sign(
-          { userId: user._id, user },
-          process.env.TOKEN,
-          {
-            expiresIn: "1d",
-          }
-        );
-        user.token = token;
-        user.save();
-        res.status(200).json({
-          message: "OTP SEND SUCESSFULLY  :" + OTP,
-        });
+        res.status(402).json("Phone No. Required");
       }
     })
     .catch((err) => {
