@@ -17,7 +17,7 @@ module.exports.otpsignup = (req, res, next) => {
     .then((user) => {
       if (user) {
         // res.status(400).send("User Already Registered..");
-        const OTP = otpGenerator.generate(6, {
+        const OTP = otpGenerator.generate(4, {
           digits: true,
           lowerCaseAlphabets: false,
           upperCaseAlphabets: false,
