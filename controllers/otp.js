@@ -35,34 +35,38 @@ module.exports.otpsignup = (req, res, next) => {
             console.log(err);
           });
       } else {
-        const OTP = otpGenerator.generate(4, {
-          digits: true,
-          lowerCaseAlphabets: false,
-          upperCaseAlphabets: false,
-          specialChars: false,
-        });
-        console.log(OTP);
-        /*  to send otp as a sms use local sms gateway {
+        if (phone.length < 9) {
+          res.status(422).json("Enter !0 digtis Mobile Number");
+        } else {
+          const OTP = otpGenerator.generate(4, {
+            digits: true,
+            lowerCaseAlphabets: false,
+            upperCaseAlphabets: false,
+            specialChars: false,
+          });
+          console.log(OTP);
+          /*  to send otp as a sms use local sms gateway {
 
         } */
 
-        const user = new User({
-          phone: phone,
-          otp: OTP,
-          source: "OTP",
-        });
-        const token = jwt.sign(
-          { userId: user._id, user },
-          process.env.TOKEN,
-          {
-            expiresIn: "1d",
-          }
-        );
-        user.token = token;
-        user.save();
-        res.status(200).json({
-          message: "OTP SEND SUCESSFULLY  :" + OTP,
-        });
+          const user = new User({
+            phone: phone,
+            otp: OTP,
+            source: "OTP",
+          });
+          const token = jwt.sign(
+            { userId: user._id, user },
+            process.env.TOKEN,
+            {
+              expiresIn: "1d",
+            }
+          );
+          user.token = token;
+          user.save();
+          res.status(200).json({
+            message: "OTP SEND SUCESSFULLY  :" + OTP,
+          });
+        }
       }
     })
     .catch((err) => {
