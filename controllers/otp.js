@@ -36,7 +36,7 @@ module.exports.otpsignup = (req, res, next) => {
           });
       } else {
         if (phone.length < 9) {
-          res.status(422).json("Enter !0 digtis Mobile Number");
+          res.status(422).json("Enter 10 digtis Mobile Number");
         } else {
           const OTP = otpGenerator.generate(4, {
             digits: true,
