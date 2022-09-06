@@ -19,7 +19,7 @@ router.get(
   "/auth/google/callback",
   passport.authenticate("google", { failureRedirect: "/auth/google", session: false }),
   (req, res, next) => {
-    res.redirect("smartveda://app/preferrenceScreen?name=${req.user.name}/email=${req.user.email}`");
+    res.redirect("mychat://preferrenceScreen");
   }
 );
 router.get(
