@@ -16,7 +16,6 @@ module.exports.otpsignup = (req, res, next) => {
   User.findOne({ phone: phone })
     .then((user) => {
       if (user) {
-        // res.status(400).send("User Already Registered..");
         const OTP = otpGenerator.generate(4, {
           digits: true,
           lowerCaseAlphabets: false,
@@ -35,9 +34,6 @@ module.exports.otpsignup = (req, res, next) => {
             console.log(err);
           });
       } else {
-        if (phone.length < 9) {
-          res.status(422).json("Enter 10 digtis Mobile Number");
-        } else {
           const OTP = otpGenerator.generate(4, {
             digits: true,
             lowerCaseAlphabets: false,
@@ -66,7 +62,6 @@ module.exports.otpsignup = (req, res, next) => {
           res.status(200).json({
             message: "OTP SEND SUCESSFULLY  :" + OTP,
           });
-        }
       }
     })
     .catch((err) => {
