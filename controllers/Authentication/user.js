@@ -141,3 +141,62 @@ exports.logout = (req, res, next) => {
     }
   });
 };
+
+exports.adminLogin = (req, res, next) => {
+  let { email, password } = req.body;
+  let errors = [];
+  if (!email) {
+    errors.push({ email: "email required" });
+  }
+  if (!emailRegxp) {
+    errors.push({ email: "invalid email" });
+  }
+  if (!password) {
+    errors.push({ password: "password required" });
+  }
+  if (errors.length > 0) {
+    return res.status(422).json({ errors: errors });
+  }
+  User.findOne({ email: email, role: 'admin' || 'superAdmin' })
+    .then((user) => {
+      if (!user) {
+        return res.status(404).json({ errors: [{ user: "User not found" }] });
+      } else {
+        bcrypt
+          .compare(password, user.password)
+          .then((match) => {
+            if (!match) {
+              return res
+                .status(404)
+                .json({ errors: [{ password: "Incorrect Password" }] });
+            } else {
+              const token = jwt.sign(
+                { userId: user._id, user },
+                process.env.TOKEN,
+                {
+                  expiresIn: "1d",
+                }
+              );
+              User.findByIdAndUpdate(user._id, { token })
+                .then((user) => {
+                  res.status(200).json({
+                    data: { id: user._id, email: user.email, role: user.role },
+                    token,
+                  });
+                })
+                .catch((err) => {
+                  next(err);
+                  console.log(err);
+                });
+            }
+          })
+          .catch((err) => {
+            res.status(502).json({ errors: err });
+            console.log(err);
+          });
+      }
+    })
+    .catch((err) => {
+      res.status(502).json({ errors: err });
+    });
+};

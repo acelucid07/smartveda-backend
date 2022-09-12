@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 let userSchema = new Schema(
   {
-        email: {
+      email: {
       type: String,
       trim: true,
       lowercase: true,
@@ -12,6 +12,15 @@ let userSchema = new Schema(
       type: String,
 
       minlength: 8,
+    },
+    role: {
+      type: String,
+      default: "user",
+      enum: ["user", "admin","superAdmin"],
+    },
+    status: {
+      type: Boolean,
+      default: 1,
     },
     token: {
       type: String,
