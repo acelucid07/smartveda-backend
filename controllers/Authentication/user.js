@@ -90,7 +90,7 @@ exports.login = (req, res, next) => {
       if (!user) {
         return res.status(404).json({ errors: [{ user: "User not found" }] });
       } else {
-        console.log("Done")
+        console.log("Done");
         bcrypt
           .compare(password, user.password)
           .then((match) => {
@@ -109,7 +109,7 @@ exports.login = (req, res, next) => {
             User.findByIdAndUpdate(user._id, { token })
               .then((user) => {
                 res.status(200).json({
-                  data: { id: user._id, email: user.email, },
+                  data: { id: user._id, email: user.email },
                   token,
                 });
               })
@@ -157,7 +157,7 @@ exports.adminLogin = (req, res, next) => {
   if (errors.length > 0) {
     return res.status(422).json({ errors: errors });
   }
-  User.find({ email: email, role: 'admin' || 'superAdmin' })
+  User.findOne({ email: email })
     .then((user) => {
       if (!user) {
         return res.status(404).json({ errors: [{ user: "User not found" }] });
@@ -170,24 +170,34 @@ exports.adminLogin = (req, res, next) => {
                 .status(404)
                 .json({ errors: [{ password: "Incorrect Password" }] });
             } else {
-              const token = jwt.sign(
-                { userId: user._id, user },
-                process.env.TOKEN,
-                {
-                  expiresIn: "1d",
-                }
-              );
-              User.findByIdAndUpdate(user._id, { token })
-                .then((user) => {
-                  res.status(200).json({
-                    data: { id: user._id, email: user.email, role: user.role },
-                    token,
+              if (user.role === "admin" || user.role === "superAdmin") {
+                const token = jwt.sign(
+                  { userId: user._id, user },
+                  process.env.TOKEN,
+                  {
+                    expiresIn: "1d",
+                  }
+                );
+                User.findByIdAndUpdate(user._id, { token })
+                  .then((user) => {
+                    res.status(200).json({
+                      data: {
+                        id: user._id,
+                        email: user.email,
+                        role: user.role,
+                      },
+                      token,
+                    });
+                  })
+                  .catch((err) => {
+                    next(err);
+                    console.log(err);
                   });
-                })
-                .catch((err) => {
-                  next(err);
-                  console.log(err);
-                });
+              } else {
+                res
+                  .status(502)
+                  .json("You Are Not Allowed to Access this Route");
+              }
             }
           })
           .catch((err) => {
