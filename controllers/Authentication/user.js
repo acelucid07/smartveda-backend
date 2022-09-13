@@ -106,17 +106,8 @@ exports.login = (req, res, next) => {
                 expiresIn: "1d",
               }
             );
-            User.findByIdAndUpdate(user._id, { token: token }, { new: true })
-              .then((user) => {
-                res.status(200).json({
-                  data: { id: user._id, email: user.email },
-                  token,
-                });
-              })
-              .catch((err) => {
-                next(err);
-                console.log(err);
-              });
+            user.token = token;
+            res.status(200).json(user);
           })
           .catch((err) => {
             res.status(502).json({ errors: err });
@@ -178,24 +169,12 @@ exports.adminLogin = (req, res, next) => {
                     expiresIn: "1d",
                   }
                 );
-                User.findByIdAndUpdate(
-                  user._id,
-                  { token: token },
-                  { new: true }
-                )
-                  .then((user) => {
-                    res.status(200).json({
-                      data: {
-                        id: user._id,
-                        email: user.email,
-                        role: user.role,
-                      },
-                      token,
-                    });
-                  })
-                  .catch((err) => {
-                    next(err);
-                    console.log(err);
+                user.token = token;
+                res
+                  .status(200)
+                  .json({
+                    data: { id: user._id, email: user.email, role: user.role },
+                    token,
                   });
               } else {
                 res
