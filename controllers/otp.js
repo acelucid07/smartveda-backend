@@ -34,17 +34,19 @@ module.exports.otpsignup = (req, res, next) => {
             console.log(err);
           });
       } else {
-          const OTP = otpGenerator.generate(4, {
-            digits: true,
-            lowerCaseAlphabets: false,
-            upperCaseAlphabets: false,
-            specialChars: false,
-          });
-          console.log(OTP);
-          /*  to send otp as a sms use local sms gateway {
+        const OTP = otpGenerator.generate(4, {
+          digits: true,
+          lowerCaseAlphabets: false,
+          upperCaseAlphabets: false,
+          specialChars: false,
+        });
+        console.log(OTP);
+        /*  to send otp as a sms use local sms gateway {
 
         } */
-
+        if (errors.length>0) {
+          res.status(500).json({message:"Please Enter Valid Mobile Number."})
+        } else {
           const user = new User({
             phone: phone,
             otp: OTP,
@@ -62,6 +64,7 @@ module.exports.otpsignup = (req, res, next) => {
           res.status(200).json({
             message: "OTP SEND SUCESSFULLY  :" + OTP,
           });
+        }
       }
     })
     .catch((err) => {
