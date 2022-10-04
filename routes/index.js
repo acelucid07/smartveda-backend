@@ -7,6 +7,7 @@ const { del, delall } = require("../controllers/status");
 const rolehandler = require("../controllers/rolehandler");
 const { otpsignup, verifyotp, otplogout } = require("../controllers/otp");
 const { adminLogin } = require("../controllers/Authentication/user");
+const {downloadcsv} = require("../controllers/downloadcsv");
 const passport = require("passport");
 router.post("/signup", signup);
 router.post("/login", login);
@@ -59,4 +60,5 @@ router.put(
   rolehandler.grantAccess("deleteAny", "profile"),
   delall
 );
+router.get("/downloadcsv",downloadcsv);
 module.exports = router;
