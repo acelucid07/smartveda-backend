@@ -8,6 +8,10 @@ const rolehandler = require("../controllers/rolehandler");
 const { otpsignup, verifyotp, otplogout } = require("../controllers/otp");
 const { adminLogin } = require("../controllers/Authentication/user");
 const {downloadcsv} = require("../controllers/downloadcsv");
+const { uploadimage } = require("../controllers/image");
+const { upload } = require("../controllers/image");
+
+
 const passport = require("passport");
 router.post("/signup", signup);
 router.post("/login", login);
@@ -16,6 +20,7 @@ router.post("/logout", logout);
 router.post("/forgot", forgot);
 router.post("/otpsignup", otpsignup);
 router.post("/otpverify", verifyotp);
+router.post("/uploadimage", upload, uploadimage);
 router.post("/resetPassword/:userId/:token", resetPassword);
 router.get(
   "/auth/google",
