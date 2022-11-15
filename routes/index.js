@@ -10,7 +10,8 @@ const { adminLogin } = require("../controllers/Authentication/user");
 const {downloadcsv} = require("../controllers/downloadcsv");
 const { uploadimage } = require("../controllers/image");
 const { upload } = require("../controllers/image");
-
+const { getParentCategoryById, getAllParentCategory, updateParentCategory, deleteParentCategory } = require("../controllers/parentcategorypms")
+const { getCategoryById, getAllCategory, updateCategory, deleteCategory } = require("../controllers/category")
 
 const passport = require("passport");
 router.post("/signup", signup);
@@ -66,4 +67,15 @@ router.put(
   delall
 );
 router.get("/downloadcsv",downloadcsv);
+
+router.get("/getparentcategory", rolehandler.grantAccess("readOwn", "profile"),getParentCategoryById);
+router.get("/getallparentcategory",rolehandler.grantAccess("readOwn", "profile"),getAllParentCategory);
+router.post("/updateparentcategory",rolehandler.grantAccess("updateOwn", "profile"),updateParentCategory);
+router.delete("/deleteparentcategory",rolehandler.grantAccess("deleteOwn", "profile"),deleteParentCategory);
+
+router.get("/getcategory", rolehandler.grantAccess("readOwn", "profile"),getCategoryById);
+router.get("/getallcategory",rolehandler.grantAccess("readOwn", "profile"),getAllCategory);
+router.post("/updatecategory",rolehandler.grantAccess("updateOwn", "profile"),updateCategory);
+router.delete("/deletecategory",rolehandler.grantAccess("deleteOwn", "profile"),deleteCategory);
+
 module.exports = router;
