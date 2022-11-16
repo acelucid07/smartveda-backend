@@ -7,7 +7,7 @@ let userSchema = new Schema(
       trim: true,
       lowercase: true,
       index:true, unique:true,sparse:true,
-    },
+    }, 
     password: {
       type: String,
 
