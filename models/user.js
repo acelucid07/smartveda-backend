@@ -8,7 +8,7 @@ let userSchema = new Schema(
       lowercase: true,
       index:true, unique:true,sparse:true,
     },
-    password: {
+    password: {  
       type: String,
 
       minlength: 8,
