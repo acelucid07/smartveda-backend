@@ -6,7 +6,7 @@ let ImageSchema = new Schema(
             type: String,
         },
     },
-    {
+    {   
         timestamps: true,
         collection: "image"
     }
