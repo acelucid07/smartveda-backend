@@ -5,7 +5,9 @@ const categorySchema = new Schema(
   {
     Id: { type: Number, index: true, unique: true },
     name: { type: String, lowercase: true },
-    parentCategoryName: { type: String, lowercase: true },
+    parentcategoryId: {
+      type: Schema.Types.ObjectId,
+    },
     status: { type: Boolean },
     image: { type: Number },
     description: { type: String },
