@@ -2,6 +2,7 @@ const User = require("../models/user");
 const emailRegxp =
   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
   const jwt = require("jsonwebtoken")
+  
 /* Create User (ADMIN)  */
 exports.create = (req, res, next) => {
   let { name, email, role, phone, password, confirm_password } = req.body;
