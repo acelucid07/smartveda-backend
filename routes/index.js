@@ -10,10 +10,11 @@ const { adminLogin } = require("../controllers/Authentication/user");
 const {downloadcsv} = require("../controllers/downloadcsv");
 const { uploadimage } = require("../controllers/image");
 const { upload } = require("../controllers/image");
-const { getParentCategoryById, getAllParentCategory, updateParentCategory, deleteParentCategory } = require("../controllers/parentcategorypms")
+const { getParentCategoryById, getAllParentCategory, updateParentCategory, deleteParentCategory } = require("../controllers/parentcategory")
 const { getCategoryById, getAllCategory, updateCategory, deleteCategory } = require("../controllers/category")
-
+const { getAllProduct, getProduct, updateProduct, deleteProduct } = require("../controllers/product")
 const passport = require("passport");
+
 router.post("/signup", signup);
 router.post("/login", login);
 router.post("/adminlogin", adminLogin);
@@ -77,5 +78,10 @@ router.get("/getcategory", rolehandler.grantAccess("readOwn", "profile"),getCate
 router.get("/getallcategory",rolehandler.grantAccess("readOwn", "profile"),getAllCategory);
 router.post("/updatecategory",rolehandler.grantAccess("updateOwn", "profile"),updateCategory);
 router.delete("/deletecategory",rolehandler.grantAccess("deleteOwn", "profile"),deleteCategory);
+
+router.get("/getproduct", rolehandler.grantAccess("readOwn", "profile"),getProduct);
+router.get("/getallproduct",rolehandler.grantAccess("readOwn", "profile"),getAllProduct);
+router.post("/updateproduct",rolehandler.grantAccess("updateOwn", "profile"),updateProduct);
+router.delete("/deleteproduct",rolehandler.grantAccess("deleteOwn", "profile"),deleteProduct);
 
 module.exports = router;
