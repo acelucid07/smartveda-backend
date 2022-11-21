@@ -9,7 +9,7 @@ const categorySchema = new Schema(
       type: Schema.Types.ObjectId,
     },
     status: { type: Boolean },
-    image: { type: Number },
+    image: { type: String },
     description: { type: String },
     meta_description: {
       meta_title: { type: String },
