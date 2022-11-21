@@ -1,5 +1,5 @@
 const Product = require("../models/product");
-const Image = require("../models/image");
+const bucket = require("../imageupload");
 
 exports.getAllProduct = (req, res, next) => {
     Product.find()
@@ -38,32 +38,21 @@ exports.getProduct = (req, res, next) => {
           console.log(Data)
       let  check = new Promise((resolve,reject)=>{
           if(Object.keys(Data).includes("images")){
-              Image.insertMany(
-                  {
-                      image: req.file.path,
-                  },
-                  { new: true },
-                  (err, doc) => {
-                      console.log(doc);
-                      if (err) throw err;
-                      else {
-                          // res.json(doc);
-                          container =doc[0]
-                          Data.images =doc[0].image
-                          console.log(Data.images)
-                          resolve(true)
+              resultdata = bucket.imageUpload(req)     
+              if (resultdata)
+              {Data.images =req.file.originalname
+              console.log(Data.images)}
                       }
+                      resolve(true)
                   }
               );
-          }
-        }) 
           check.then((result)=>{
               if(result){
                   console.log(result)
                 Product.findByIdAndUpdate(req.body.Id,Data,{new:true})
               .then((response2) => {
                 if (response2) {
-                  res.status(200).send([response2,container]);
+                  res.status(200).send(response2);
                 }
               })
               .catch((err) => {
