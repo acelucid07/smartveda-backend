@@ -1,9 +1,12 @@
 const Category = require("../models/category");
-const Image = require("../models/image");
+const bucket = require("../mediacontrol");
 exports.getAllCategory = (req, res, next) => {
   Category.find()
     .then((response) => {
       if (response) {
+        response.map((item) => {
+          item.images = process.env.bucket_path + item.images;
+        });
         res.status(200).send(response);
       }
     })
@@ -20,6 +23,7 @@ exports.getCategoryById = (req, res, next) => {
   Category.findOne({ Id: Id })
     .then((response) => {
       if (response) {
+        response.images = process.env.bucket_path + response.images;
         res.status(200).send(response);
       }
     })
@@ -31,61 +35,54 @@ exports.getCategoryById = (req, res, next) => {
     });
 };
 
-exports.updateCategory =  (req, res, next) => {
-      let container;
-      let  Data = JSON.parse( req.body.Data);
-      console.log(req.body.Id)
-      let  check = new Promise((resolve,reject)=>{
-      if(Object.keys(Data).includes("image")){
-          Image.insertMany(
-              {
-                  image: req.file.path,
-              },
-              { new: true },
-              (err, doc) => {
-                  console.log(doc);
-                  if (err) throw err;
-                  else {
-                      // res.json(doc);
-                      container =doc[0]
-                      Data.image =doc[0].image
-                      console.log(Data.image)
-                      resolve(true)
-                  }
-              }
-          );
-      }
-    }) 
-      check.then((result)=>{
-          if(result){
-              console.log(result)
-            Category.findOneAndUpdate(req.body.Id,Data,{new:true})
-          .then((response2) => {
-            if (response2) {
-              res.status(200).send([response2,container]);
-            }
-          })
-          .catch((err) => {
-            res.status(500).json({
-              errors: [{ error: "Something went wrong" }],
-            });
-            console.log(err);
-          })
-  }})
-  }
+exports.updateCategory = (req, res, next) => {
+  let Data = JSON.parse(req.body.Data);
+  let check = new Promise((resolve, reject) => {
+    if (Object.keys(Data).includes("image")) {
+      bucket.imageUpload(req.file).then(() => {
+        Data.image = req.file.originalname;
+        resolve(true);
+      });
+    } else {
+      resolve(true);
+    }
+  });
+  check.then((result) => {
+    if (result) {
+      console.log(req.body.Id);
+      Category.findOneAndUpdate({ Id: req.body.Id }, Data, { new: true })
+        .then((response2) => {
+          if (response2) {
+            res.status(200).send(response2);
+          }
+        })
+        .catch((err) => {
+          res.status(500).json({
+            errors: [{ error: "Something went wrong" }],
+          });
+          console.log(err);
+        });
+    }
+  });
+};
 
 exports.deleteCategory = (req, res, next) => {
-  let { Id } = req.body;
-  Category.findOneAndRemove({ Id: Id })
-    .then((response) => {
-      if (response) {
-        res.status(200).send(response);
-      }
-    })
-    .catch((err) => {
-      res.status(500).json({
-        errors: [{ error: "Something went wrong" }],
-      });
-      console.log(err);
-    });
+  bucket.listfiles()
+  // let { Id } = req.body;
+  // Category.findOneAndRemove({ Id: Id })
+  //   .then((response) => {
+  //     if (response) {
+  //       bucket.imageDelete(response.image).then((returned)=>{
+         
+  //        console.log(returned)
+  //        if (returned) res.status(200).send(response);
+  //       })
+  //     }
+  //   })
+  //   .catch((err) => {
+  //     res.status(500).json({
+  //       errors: [{ error: "Something went wrong" }],
+  //     });
+  //     console.log(err);
+  //   });
 };

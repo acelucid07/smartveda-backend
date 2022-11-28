@@ -1,7 +1,7 @@
 const AccessControl = require("accesscontrol");
 const ac = new AccessControl();
 exports.roles = (function () {
-  ac.grant("user").readOwn("profile").updateOwn("profile").deleteOwn("profile");
+  ac.grant("user").readOwn("profile").updateOwn("profile").deleteOwn("profile").createOwn("profile");
   ac.grant("admin")
     .extend("user")
     .readAny("profile")
