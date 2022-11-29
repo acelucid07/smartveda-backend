@@ -10,9 +10,29 @@ const { adminLogin } = require("../controllers/Authentication/user");
 const {downloadcsv} = require("../controllers/downloadcsv");
 const { uploadimage } = require("../controllers/image");
 const { upload } = require("../controllers/image");
-
-
+const { getParentCategoryById, getAllParentCategory, updateParentCategory, deleteParentCategory } = require("../controllers/parentcategory")
+const { getCategoryById, getAllCategory, updateCategory, deleteCategory } = require("../controllers/category")
+const { createProduct, getAllProduct, getProduct, deleteProduct, updateProduct} = require("../controllers/product")
 const passport = require("passport");
+const multer  = require('multer')
+const path = require("path");
+const storage = multer.diskStorage(
+  {
+  destination: function (req, file, cb) {
+      cb(null, "uploads/");
+  },
+  filename: function (req, file, cb) {
+      let ext = path.extname(file.originalname);
+      cb(null, Date.now() + ext);
+  },
+}
+);
+
+const upload2 = multer({
+  storage: storage,
+});
+
+
 router.post("/signup", signup);
 router.post("/login", login);
 router.post("/adminlogin", adminLogin);
@@ -66,4 +86,27 @@ router.put(
   delall
 );
 router.get("/downloadcsv",downloadcsv);
+
+router.get("/getparentcategory", rolehandler.grantAccess("readOwn", "profile"),getParentCategoryById);
+router.get("/getallparentcategory",rolehandler.grantAccess("readOwn", "profile"),getAllParentCategory);
+router.post("/updateparentcategory",rolehandler.grantAccess("updateOwn", "profile"),updateParentCategory);
+router.delete("/deleteparentcategory",rolehandler.grantAccess("deleteOwn", "profile"),deleteParentCategory);
+
+router.get("/getcategory", rolehandler.grantAccess("readOwn", "profile"),getCategoryById);
+router.get("/getallcategory",rolehandler.grantAccess("readOwn", "profile"),getAllCategory);
+router.post("/updatecategory",rolehandler.grantAccess("updateOwn", "profile"),upload2.single("image"),updateCategory);
+router.delete("/deletecategory",rolehandler.grantAccess("deleteOwn", "profile"),deleteCategory);
+
+router.post("/createproduct", rolehandler.grantAccess("createOwn", "profile"),upload2.fields([
+  { name: 'image', maxCount: 1 },
+  { name: 'video', maxCount: 1 }
+]),createProduct);
+router.get("/getproduct", rolehandler.grantAccess("readOwn", "profile"),getProduct);
+router.get("/getallproduct",rolehandler.grantAccess("readOwn", "profile"),getAllProduct);
+router.post("/updateproduct",rolehandler.grantAccess("updateOwn", "profile"),upload2.fields([
+  { name: 'image', maxCount: 1 },
+  { name: 'video', maxCount: 1 }
+]),updateProduct);
+router.delete("/deleteproduct",rolehandler.grantAccess("deleteOwn", "profile"),deleteProduct);
+
 module.exports = router;

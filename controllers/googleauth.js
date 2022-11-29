@@ -10,6 +10,7 @@ passport.use(
       callbackURL: process.env.GOOGLE_CALLBACK_URL,
       passReqToCallback: true,
     },
+    
     function (request, accessToken, refreshToken, profile, done) {
       const user = new User({
         id: profile.id,

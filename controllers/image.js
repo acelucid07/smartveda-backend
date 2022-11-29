@@ -14,11 +14,7 @@ const storage = multer.diskStorage({
 const upload = multer({
     storage: storage,
 });
-(module.exports.upload = upload.single("image")),
-    (req, res, next) => {
-        next();
-    };
-
+exports.upload = upload.single("imagefile")
 exports.uploadimage = (req, res, next) => {
     Image.insertMany(
         {

@@ -31,7 +31,7 @@ exports.signup = (req, res, next) => {
           password: password,
         });
         const token = jwt.sign(
-          { userId: users._id, users },
+          { userId: users._id },
           process.env.TOKEN,
           {
             expiresIn: "1d",
@@ -100,7 +100,7 @@ exports.login = (req, res, next) => {
                 .json({ errors: [{ password: "Incorrect Password" }] });
             }
             const token = jwt.sign(
-              { userId: user._id, user },
+              { userId: user._id },
               process.env.TOKEN,
               {
                 expiresIn: "1d",
@@ -163,7 +163,7 @@ exports.adminLogin = (req, res, next) => {
             } else {
               if (user.role === "admin" || user.role === "superAdmin") {
                 const token = jwt.sign(
-                  { userId: user._id, user },
+                  { userId: user._id },
                   process.env.TOKEN,
                   {
                     expiresIn: "1d",

@@ -2,13 +2,15 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 let userSchema = new Schema(
   {
-      email: {
+    email: {
       type: String,
       trim: true,
       lowercase: true,
-      index:true, unique:true,sparse:true,
+      index: true,
+      unique: true,
+      sparse: true,
     },
-    password: {  
+    password: {
       type: String,
 
       minlength: 8,
@@ -16,7 +18,7 @@ let userSchema = new Schema(
     role: {
       type: String,
       default: "user",
-      enum: ["user", "admin","superAdmin"],
+      enum: ["user", "admin", "superAdmin"],
     },
     status: {
       type: Boolean,
@@ -37,6 +39,54 @@ let userSchema = new Schema(
     },
     otp: {
       type: String,
+    },
+    address: {
+      shippingAddress: {
+        pincode: {
+          type: Number
+        },
+        flat_No: {
+          type: Number,
+        },
+        area: {
+          type: String,
+        },
+        landmark: {
+          type: String,
+        },
+        city: {
+          type: String,
+        },
+        state: {
+          type: String,
+        },
+        country: {
+          type: String,
+        },
+      },
+      billingAddress: {
+        pincode: {
+          type: Number,
+        },
+        flat_No: {
+          type: Number,
+        },
+        area: {
+          type: String,
+        },
+        landmark: {
+          type: String,
+        },
+        city: {
+          type: String,
+        },
+        state: {
+          type: String,
+        },
+        country: {
+          type: String,
+        },
+      },
     },
     createdAt: { type: Date, default: Date.now(), index: { expiresIn: 300 } },
     source: { type: String },
