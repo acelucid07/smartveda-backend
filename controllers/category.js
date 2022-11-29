@@ -5,7 +5,7 @@ exports.getAllCategory = (req, res, next) => {
     .then((response) => {
       if (response) {
         response.map((item) => {
-          item.images = process.env.bucket_path + item.images;
+          item.image = process.env.bucket_path + item.image;
         });
         res.status(200).send(response);
       }
@@ -23,7 +23,7 @@ exports.getCategoryById = (req, res, next) => {
   Category.findOne({ Id: Id })
     .then((response) => {
       if (response) {
-        response.images = process.env.bucket_path + response.images;
+        response.image = process.env.bucket_path + response.image;
         res.status(200).send(response);
       }
     })
@@ -67,22 +67,21 @@ exports.updateCategory = (req, res, next) => {
 };
 
 exports.deleteCategory = (req, res, next) => {
-  bucket.listfiles()
-  // let { Id } = req.body;
-  // Category.findOneAndRemove({ Id: Id })
-  //   .then((response) => {
-  //     if (response) {
-  //       bucket.imageDelete(response.image).then((returned)=>{
+  let { Id } = req.body;
+  Category.findOneAndRemove({ Id: Id })
+    .then((response) => {
+      if (response) {
+        bucket.imageDelete(response.image).then((returned)=>{
          
-  //        console.log(returned)
-  //        if (returned) res.status(200).send(response);
-  //       })
-  //     }
-  //   })
-  //   .catch((err) => {
-  //     res.status(500).json({
-  //       errors: [{ error: "Something went wrong" }],
-  //     });
-  //     console.log(err);
-  //   });
+         console.log(returned)
+         if (returned) res.status(200).send(response);
+        })
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({
+        errors: [{ error: "Something went wrong" }],
+      });
+      console.log(err);
+    });
 };

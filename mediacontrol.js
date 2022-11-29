@@ -10,11 +10,13 @@ exports.imageUpload= async (filedata)=>{
     const uploadedImage = await s3.upload({
         Bucket: process.env.AWS_S3_BUCKET_NAME,
         Key:filedata.originalname,
+        ContentType: 'image/jpeg',
+        ACL:'public-read',
         Body: blob,
       }).promise().catch(err=>{
         console.log(err)
       })
-      // console.log(uploadedImage.Location)
+      console.log(uploadedImage.Location)
       return uploadedImage.Location
 }
 
@@ -30,7 +32,7 @@ exports.imageDelete= async (filedata)=>{
         console.log(err)
       })
       console.log(deletedImage)
-      return (uploadedImage.DeleteMarker)
+      return (deletedImage.DeleteMarker)
 }
 
 exports.listfiles= async ()=>{
@@ -59,6 +61,8 @@ exports.videoUpload= async (filedata)=>{
       Bucket: process.env.AWS_S3_BUCKET_NAME,
       Key:filedata.originalname,
       Body: blob,
+      ContentType: 'video/mp4',
+      ACL:'public-read'
     }).promise().catch(err=>{
       console.log(err)
     })
@@ -71,11 +75,11 @@ exports.videoDelete= async (filedata)=>{
     accessKeyId: process.env.AWS_S3_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY,
   })
-const uploadedVideo = await s3.deleteObject({
+const deletedVideo = await s3.deleteObject({
     Bucket: process.env.AWS_S3_BUCKET_NAME,
     Key:filedata
   }).promise().catch(err=>{
     console.log(err)
   })
-  return uploadedVideo.DeleteMarker
+  return deletedVideo.DeleteMarker
 }
