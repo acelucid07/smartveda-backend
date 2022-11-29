@@ -1,7 +1,15 @@
 # dependencies
+<<<<<<< HEAD
 /node_modules
 
 
 # dotenv environment variables file
 .env
 .env.test
+=======
+#/node_modules
+#/.env
+
+node_modules/*
+.env
+>>>>>>> main
