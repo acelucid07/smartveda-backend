@@ -16,6 +16,7 @@ const { createProduct, getAllProduct, getProduct, deleteProduct, updateProduct} 
 const passport = require("passport");
 const multer  = require('multer')
 const path = require("path");
+const { getAllOrders, getOrder, updateOrder, deleteOrder } = require("../controllers/order");
 const storage = multer.diskStorage(
   {
   destination: function (req, file, cb) {
@@ -87,15 +88,21 @@ router.put(
 );
 router.get("/downloadcsv",downloadcsv);
 
+//parent category table api
+
 router.get("/getparentcategory", rolehandler.grantAccess("readOwn", "profile"),getParentCategoryById);
 router.get("/getallparentcategory",rolehandler.grantAccess("readOwn", "profile"),getAllParentCategory);
 router.post("/updateparentcategory",rolehandler.grantAccess("updateOwn", "profile"),updateParentCategory);
 router.delete("/deleteparentcategory",rolehandler.grantAccess("deleteOwn", "profile"),deleteParentCategory);
 
+//category table api
+
 router.get("/getcategory", rolehandler.grantAccess("readOwn", "profile"),getCategoryById);
 router.get("/getallcategory",rolehandler.grantAccess("readOwn", "profile"),getAllCategory);
 router.post("/updatecategory",rolehandler.grantAccess("updateOwn", "profile"),upload2.single("image"),updateCategory);
 router.delete("/deletecategory",rolehandler.grantAccess("deleteOwn", "profile"),deleteCategory);
+
+//product table api 
 
 router.post("/createproduct", rolehandler.grantAccess("createOwn", "profile"),upload2.fields([
   { name: 'image', maxCount: 1 },
@@ -109,4 +116,10 @@ router.post("/updateproduct",rolehandler.grantAccess("updateOwn", "profile"),upl
 ]),updateProduct);
 router.delete("/deleteproduct",rolehandler.grantAccess("deleteOwn", "profile"),deleteProduct);
 
+//order table api
+
+router.get("/getallorders", rolehandler.grantAccess("readOwn", "profile"),getAllOrders);
+router.get("/getorder", rolehandler.grantAccess("readOwn", "profile"),getOrder);
+router.post("/updateorder", rolehandler.grantAccess("updateOwn", "profile"),upload2.none(),updateOrder);
+router.delete("/deleteorder",rolehandler.grantAccess("deleteOwn", "profile"),deleteOrder);
 module.exports = router;
