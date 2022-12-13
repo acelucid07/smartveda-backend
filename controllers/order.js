@@ -17,7 +17,8 @@ exports.getAllOrders = (req, res, next) => {
 };
 
 exports.getOrder = (req, res, next) => {
-    let { Id } = req.body;
+  let  Id
+  (req.query.id)?Id = req.query.id:next()
     Order.findById(Id)
       .then((response) => {
         if (response) {
@@ -34,9 +35,11 @@ exports.getOrder = (req, res, next) => {
   
 
   exports.updateOrder = (req, res, next) => {
+    let  Id
+    (req.query.id)?Id = req.query.id:next()
     let Data = JSON.parse(req.body.Data);
     console.log(Data);
-        Order.findByIdAndUpdate(req.body.Id, Data, { new: true })
+        Order.findByIdAndUpdate(Id, Data, { new: true })
           .then((response2) => {
             if (response2) {
               res.status(200).send(response2);
@@ -51,7 +54,8 @@ exports.getOrder = (req, res, next) => {
       }
 
 exports.deleteOrder = (req, res, next) => {
-  let { Id } = req.body;
+  let  Id
+ (req.query.id)?Id = req.query.id:next()
   Order.findByIdAndDelete(Id)
     .then((response) => {
       if (response) {
