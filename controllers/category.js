@@ -21,7 +21,7 @@ exports.getAllCategory = (req, res, next) => {
 exports.getCategoryById = (req, res, next) => {
   let  Id
  (req.query.id)?Id = req.query.id:next()
-  Category.findOne({ Id: Id })
+  Category.findById(Id)
     .then((response) => {
       if (response) {
         response.image = process.env.bucket_path + response.image;
@@ -53,7 +53,7 @@ exports.updateCategory = (req, res, next) => {
   check.then((result) => {
     if (result) {
       console.log(req.body.Id);
-      Category.findOneAndUpdate({ Id: Id }, Data, { new: true })
+      Category.findByIdAndUpdate(Id, Data, { new: true })
         .then((response2) => {
           if (response2) {
             res.status(200).send(response2);
@@ -72,7 +72,7 @@ exports.updateCategory = (req, res, next) => {
 exports.deleteCategory = (req, res, next) => {
   let  Id
   (req.query.id)?Id = req.query.id:next()
-  Category.findOneAndRemove({ Id: Id })
+  Category.findByIdAndDelete(Id)
     .then((response) => {
       if (response) {
         bucket.imageDelete(response.image).then((returned)=>{

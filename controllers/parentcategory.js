@@ -18,7 +18,7 @@ exports.getAllParentCategory = (req, res, next) => {
 exports.getParentCategoryById = (req, res, next) => {
   let  Id
  (req.query.id)?Id = req.query.id:next()
-  ParentCategory.findOne({ Id: Id })
+  ParentCategory.findById(Id)
     .then((response) => {
       if (response) {
         res.status(200).send(response);
@@ -35,7 +35,7 @@ exports.getParentCategoryById = (req, res, next) => {
 exports.updateParentCategory = (req, res, next) => {
   let { Id , Data} = req.body;
   console.log(Data)
-  ParentCategory.findOneAndUpdate({ Id: Id },Data,{new:true})
+  ParentCategory.findByIdAndUpdate(Id, Data, { new: true })
     .then((response) => {
       if (response) {
         res.status(200).send(response);
@@ -52,7 +52,7 @@ exports.updateParentCategory = (req, res, next) => {
 exports.deleteParentCategory = (req, res, next) => {
   let  Id
  (req.query.id)?Id = req.query.id:next()
-  ParentCategory.findOneAndRemove({ Id: Id })
+  ParentCategory.findByIdAndDelete(Id)
     .then((response) => {
       if (response) {
         res.status(200).send(response);
