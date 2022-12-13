@@ -21,7 +21,8 @@ exports.getAllProduct = (req, res, next) => {
 };
 
 exports.getProduct = (req, res, next) => {
-  let { Id } = req.body;
+  let  Id
+ (req.query.id)?Id = req.query.id:next()
   Product.findById(Id)
     .then((response) => {
       if (response) {
@@ -77,6 +78,8 @@ exports.createProduct = (req, res, next) => {
 
 
 exports.updateProduct = (req, res, next) => {
+  let  Id
+  (req.query.id)?Id = req.query.id:next()
   let Data = JSON.parse(req.body.Data);
   let resultdata = "";
   let resultvideodata = "";
@@ -119,7 +122,7 @@ exports.updateProduct = (req, res, next) => {
   });
   check.then((result) => {
     if (result) {
-      Product.findByIdAndUpdate(req.body.Id, Data, { new: true })
+      Product.findByIdAndUpdate(Id, Data, { new: true })
         .then((response2) => {
           if (response2) {
             res.status(200).send(response2);
@@ -140,7 +143,8 @@ exports.updateProduct = (req, res, next) => {
 exports.deleteProduct = (req, res, next) => {
   // bucket.listfiles();
   let resultdata, resultvideodata;
-  let { Id } = req.body;
+  let  Id
+ (req.query.id)?Id = req.query.id:next()
   Product.findByIdAndDelete(Id)
     .then((response) => {
       if (response) {

@@ -90,36 +90,36 @@ router.get("/downloadcsv",downloadcsv);
 
 //parent category table api
 
-router.get("/getparentcategory", rolehandler.grantAccess("readOwn", "profile"),getParentCategoryById);
-router.get("/getallparentcategory",rolehandler.grantAccess("readOwn", "profile"),getAllParentCategory);
-router.post("/updateparentcategory",rolehandler.grantAccess("updateOwn", "profile"),updateParentCategory);
-router.delete("/deleteparentcategory",rolehandler.grantAccess("deleteOwn", "profile"),deleteParentCategory);
+router.get("/parentcategories", rolehandler.grantAccess("readOwn", "profile"),getParentCategoryById);
+router.get("/parentcategories",rolehandler.grantAccess("readOwn", "profile"),getAllParentCategory);
+router.put("/parentcategories",rolehandler.grantAccess("updateOwn", "profile"),updateParentCategory);
+router.delete("/parentcategories",rolehandler.grantAccess("deleteOwn", "profile"),deleteParentCategory);
 
 //category table api
 
-router.get("/getcategory", rolehandler.grantAccess("readOwn", "profile"),getCategoryById);
-router.get("/getallcategory",rolehandler.grantAccess("readOwn", "profile"),getAllCategory);
-router.post("/updatecategory",rolehandler.grantAccess("updateOwn", "profile"),upload2.single("image"),updateCategory);
-router.delete("/deletecategory",rolehandler.grantAccess("deleteOwn", "profile"),deleteCategory);
+router.get("/categories", rolehandler.grantAccess("readOwn", "profile"),getCategoryById);
+router.get("/categories",rolehandler.grantAccess("readOwn", "profile"),getAllCategory);
+router.put("/categories",rolehandler.grantAccess("updateOwn", "profile"),upload2.single("image"),updateCategory);
+router.delete("/categories",rolehandler.grantAccess("deleteOwn", "profile"),deleteCategory);
 
 //product table api 
 
-router.post("/createproduct", rolehandler.grantAccess("createOwn", "profile"),upload2.fields([
+router.post("/products", rolehandler.grantAccess("createOwn", "profile"),upload2.fields([
   { name: 'image', maxCount: 1 },
   { name: 'video', maxCount: 1 }
 ]),createProduct);
-router.get("/getproduct", rolehandler.grantAccess("readOwn", "profile"),getProduct);
-router.get("/getallproduct",rolehandler.grantAccess("readOwn", "profile"),getAllProduct);
-router.post("/updateproduct",rolehandler.grantAccess("updateOwn", "profile"),upload2.fields([
+router.get("/products", rolehandler.grantAccess("readOwn", "profile"),getProduct);
+router.get("/products",rolehandler.grantAccess("readOwn", "profile"),getAllProduct);
+router.put("/products",rolehandler.grantAccess("updateOwn", "profile"),upload2.fields([
   { name: 'image', maxCount: 1 },
   { name: 'video', maxCount: 1 }
 ]),updateProduct);
-router.delete("/deleteproduct",rolehandler.grantAccess("deleteOwn", "profile"),deleteProduct);
+router.delete("/products",rolehandler.grantAccess("deleteOwn", "profile"),deleteProduct);
 
 //order table api
 
-router.get("/getallorders", rolehandler.grantAccess("readOwn", "profile"),getAllOrders);
-router.get("/getorder", rolehandler.grantAccess("readOwn", "profile"),getOrder);
-router.post("/updateorder", rolehandler.grantAccess("updateOwn", "profile"),upload2.none(),updateOrder);
-router.delete("/deleteorder",rolehandler.grantAccess("deleteOwn", "profile"),deleteOrder);
+router.get("/orders", rolehandler.grantAccess("readOwn", "profile"),getAllOrders);
+router.get("/orders", rolehandler.grantAccess("readOwn", "profile"),getOrder);
+router.put("/orders", rolehandler.grantAccess("updateOwn", "profile"),upload2.none(),updateOrder);
+router.delete("/orders",rolehandler.grantAccess("deleteOwn", "profile"),deleteOrder);
 module.exports = router;

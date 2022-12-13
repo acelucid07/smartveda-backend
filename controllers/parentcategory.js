@@ -1,5 +1,6 @@
 const ParentCategory = require("../models/parentCategory");
 exports.getAllParentCategory = (req, res, next) => {
+  console.log("get all parent category ")
   ParentCategory.find()
     .then((response) => {
       if (response) {
@@ -15,7 +16,8 @@ exports.getAllParentCategory = (req, res, next) => {
 };
 
 exports.getParentCategoryById = (req, res, next) => {
-  let { Id } = req.body;
+  let  Id
+ (req.query.id)?Id = req.query.id:next()
   ParentCategory.findOne({ Id: Id })
     .then((response) => {
       if (response) {
@@ -48,7 +50,8 @@ exports.updateParentCategory = (req, res, next) => {
 };
 
 exports.deleteParentCategory = (req, res, next) => {
-  let { Id } = req.body;
+  let  Id
+ (req.query.id)?Id = req.query.id:next()
   ParentCategory.findOneAndRemove({ Id: Id })
     .then((response) => {
       if (response) {

@@ -19,7 +19,8 @@ exports.getAllCategory = (req, res, next) => {
 };
 
 exports.getCategoryById = (req, res, next) => {
-  let { Id } = req.body;
+  let  Id
+ (req.query.id)?Id = req.query.id:next()
   Category.findOne({ Id: Id })
     .then((response) => {
       if (response) {
@@ -36,6 +37,8 @@ exports.getCategoryById = (req, res, next) => {
 };
 
 exports.updateCategory = (req, res, next) => {
+  let  Id
+  (req.query.id)?Id = req.query.id:next()
   let Data = JSON.parse(req.body.Data);
   let check = new Promise((resolve, reject) => {
     if (Object.keys(Data).includes("image")) {
@@ -50,7 +53,7 @@ exports.updateCategory = (req, res, next) => {
   check.then((result) => {
     if (result) {
       console.log(req.body.Id);
-      Category.findOneAndUpdate({ Id: req.body.Id }, Data, { new: true })
+      Category.findOneAndUpdate({ Id: Id }, Data, { new: true })
         .then((response2) => {
           if (response2) {
             res.status(200).send(response2);
@@ -67,7 +70,8 @@ exports.updateCategory = (req, res, next) => {
 };
 
 exports.deleteCategory = (req, res, next) => {
-  let { Id } = req.body;
+  let  Id
+  (req.query.id)?Id = req.query.id:next()
   Category.findOneAndRemove({ Id: Id })
     .then((response) => {
       if (response) {

@@ -13,7 +13,7 @@ const orderSchema = new Schema(
       phoneNo: { type: String },
     },
     productDetails: {
-      productName: { type: String },
+      productName: { type: String},
       quantity: { type: String },
     },
     address: {
