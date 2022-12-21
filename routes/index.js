@@ -16,7 +16,8 @@ const { createProduct, getAllProduct, getProduct, deleteProduct, updateProduct} 
 const passport = require("passport");
 const multer  = require('multer')
 const path = require("path");
-const { getAllOrders, getOrder, updateOrder, deleteOrder } = require("../controllers/order");
+const { getAllOrders, getOrder, updateOrder, deleteOrder, createOrder } = require("../controllers/order");
+const { getAllShipmentDetails, createShipment, updateShipment, getShipment } = require("../controllers/shipment");
 const storage = multer.diskStorage(
   {
   destination: function (req, file, cb) {
@@ -118,8 +119,17 @@ router.delete("/products",rolehandler.grantAccess("deleteOwn", "profile"),delete
 
 //order table api
 
-router.get("/orders", rolehandler.grantAccess("readOwn", "profile"),getAllOrders);
+router.get("/orders",getAllOrders);
 router.get("/orders", rolehandler.grantAccess("readOwn", "profile"),getOrder);
-router.put("/orders", rolehandler.grantAccess("updateOwn", "profile"),upload2.none(),updateOrder);
+router.post("/orders",rolehandler.grantAccess("updateOwn", "profile"),upload2.none(),createOrder)
+router.put("/orders",rolehandler.grantAccess("updateOwn", "profile"),upload2.none(),updateOrder);
 router.delete("/orders",rolehandler.grantAccess("deleteOwn", "profile"),deleteOrder);
+
+//shipment table api
+
+router.get("/shipments",getAllShipmentDetails);
+router.get("/shipments",rolehandler.grantAccess("readOwn", "profile"),getShipment);
+router.post("/shipments",rolehandler.grantAccess("updateOwn", "profile"),upload2.none(),createShipment)
+router.put("/shipments",rolehandler.grantAccess("updateOwn", "profile"),upload2.none(),updateShipment);
+router.delete("/shipments",rolehandler.grantAccess("deleteOwn", "profile"),deleteOrder);
 module.exports = router;
