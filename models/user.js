@@ -20,6 +20,9 @@ let userSchema = new Schema(
       default: "user",
       enum: ["user", "admin", "superAdmin"],
     },
+    username: {
+    type:String,
+    },
     status: {
       type: Boolean,
       default: 1,
@@ -45,8 +48,8 @@ let userSchema = new Schema(
         pincode: {
           type: Number
         },
-        flat_No: {
-          type: Number,
+        building: {
+          type: String,
         },
         area: {
           type: String,
@@ -68,8 +71,8 @@ let userSchema = new Schema(
         pincode: {
           type: Number,
         },
-        flat_No: {
-          type: Number,
+       building: {
+          type: String,
         },
         area: {
           type: String,
