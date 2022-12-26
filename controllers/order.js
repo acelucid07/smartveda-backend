@@ -21,7 +21,8 @@ exports.getAllOrders = (req, res, next) => {
 
 exports.getOrder = (req, res, next) => {
   let  Id
-  (req.query.id)?Id = req.query.id:next()
+  if (req.query.id) { Id = req.query.id }
+  else { return next() }
     Order.findById(Id)
       .then((response) => {
         if (response) {
@@ -82,7 +83,8 @@ exports.getOrder = (req, res, next) => {
   exports.updateOrder = (req, res, next) => {
     let  Id
     let name='';
-    (req.query.id)?Id = req.query.id:next()
+    if (req.query.id) { Id = req.query.id }
+    else { return next() }
     let Data = JSON.parse(req.body.Data);
     let changeAddress = JSON.parse(req.body.allowAddressChange);
     console.log(Data);
@@ -127,7 +129,8 @@ if(req.body.product_quantity_diff)
 
 exports.deleteOrder = (req, res, next) => {
   let  Id
- (req.query.id)?Id = req.query.id:next()
+  if (req.query.id) { Id = req.query.id }
+  else { return next() }
   Order.findByIdAndDelete(Id)
     .then((response) => {
       if (response) {

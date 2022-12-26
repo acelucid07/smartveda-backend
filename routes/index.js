@@ -119,16 +119,16 @@ router.delete("/products",rolehandler.grantAccess("deleteOwn", "profile"),delete
 
 //order table api
 
-router.get("/orders",getAllOrders);
 router.get("/orders", rolehandler.grantAccess("readOwn", "profile"),getOrder);
+router.get("/orders",rolehandler.grantAccess("readOwn", "profile"),getAllOrders);
 router.post("/orders",rolehandler.grantAccess("updateOwn", "profile"),upload2.none(),createOrder)
 router.put("/orders",rolehandler.grantAccess("updateOwn", "profile"),upload2.none(),updateOrder);
 router.delete("/orders",rolehandler.grantAccess("deleteOwn", "profile"),deleteOrder);
 
 //shipment table api
 
-router.get("/shipments",getAllShipmentDetails);
 router.get("/shipments",rolehandler.grantAccess("readOwn", "profile"),getShipment);
+router.get("/shipments",rolehandler.grantAccess("readOwn", "profile"),getAllShipmentDetails);
 router.post("/shipments",rolehandler.grantAccess("updateOwn", "profile"),upload2.none(),createShipment)
 router.put("/shipments",rolehandler.grantAccess("updateOwn", "profile"),upload2.none(),updateShipment);
 router.delete("/shipments",rolehandler.grantAccess("deleteOwn", "profile"),deleteOrder);
