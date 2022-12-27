@@ -12,10 +12,9 @@ const orderSchema = new Schema(
       email: { type: String },
       phoneNo: { type: String },
     },
-    productDetails: {
-      productName: { type: String},
-      quantity: { type: String },
-    },
+    productDetails: [
+      { productName: { type: String }, quantity: { type: String } },
+    ],
     address: {
       billingAddress: {
         name: { type: String },
