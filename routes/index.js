@@ -18,6 +18,7 @@ const multer  = require('multer')
 const path = require("path");
 const { getAllOrders, getOrder, updateOrder, deleteOrder, createOrder } = require("../controllers/order");
 const { getAllShipmentDetails, createShipment, updateShipment, getShipment } = require("../controllers/shipment");
+const { getAllSponsors, getSponsorDetail, createSponsorDetail, updateSponsorDetail, deleteSponsorDetail } = require("../controllers/sponsor");
 const storage = multer.diskStorage(
   {
   destination: function (req, file, cb) {
@@ -132,4 +133,12 @@ router.get("/shipments",rolehandler.grantAccess("readOwn", "profile"),getAllShip
 router.post("/shipments",rolehandler.grantAccess("updateOwn", "profile"),upload2.none(),createShipment)
 router.put("/shipments",rolehandler.grantAccess("updateOwn", "profile"),upload2.none(),updateShipment);
 router.delete("/shipments",rolehandler.grantAccess("deleteOwn", "profile"),deleteOrder);
+
+//sponsor table api
+
+router.get("/sponsors",rolehandler.grantAccess("readOwn", "profile"),getSponsorDetail);
+router.get("/sponsors",rolehandler.grantAccess("readOwn", "profile"),getAllSponsors);
+router.post("/sponsors",rolehandler.grantAccess("updateOwn", "profile"),upload2.none(),createSponsorDetail);
+router.put("/sponsors",rolehandler.grantAccess("updateOwn", "profile"),upload2.none(),updateSponsorDetail);
+router.delete("/sponsors",rolehandler.grantAccess("deleteOwn", "profile"),deleteSponsorDetail);
 module.exports = router;
