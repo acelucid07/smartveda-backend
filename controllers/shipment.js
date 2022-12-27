@@ -72,7 +72,6 @@ result.then((response)=>{
 })
 } 
 
-
 exports.createShipment = (req, res, next) => {
     let Data = JSON.parse(req.body.Data);
     // let amount = JSON.parse(req.body.product_quantity);
