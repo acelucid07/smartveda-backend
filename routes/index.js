@@ -19,6 +19,7 @@ const path = require("path");
 const { getAllOrders, getOrder, updateOrder, deleteOrder, createOrder } = require("../controllers/order");
 const { getAllShipmentDetails, createShipment, updateShipment, getShipment } = require("../controllers/shipment");
 const { getAllSponsors, getSponsorDetail, createSponsorDetail, updateSponsorDetail, deleteSponsorDetail } = require("../controllers/sponsor");
+const { getAllCoupon, getCouponDetail, createCoupon, updateCouponDetail, deleteCoupon } = require("../controllers/coupon");
 const storage = multer.diskStorage(
   {
   destination: function (req, file, cb) {
@@ -141,4 +142,13 @@ router.get("/sponsors",rolehandler.grantAccess("readOwn", "profile"),getAllSpons
 router.post("/sponsors",rolehandler.grantAccess("updateOwn", "profile"),upload2.none(),createSponsorDetail);
 router.put("/sponsors",rolehandler.grantAccess("updateOwn", "profile"),upload2.none(),updateSponsorDetail);
 router.delete("/sponsors",rolehandler.grantAccess("deleteOwn", "profile"),deleteSponsorDetail);
+
+//coupon table api
+
+router.get("/coupons",rolehandler.grantAccess("readOwn", "profile"),getCouponDetail);
+router.get("/coupons",rolehandler.grantAccess("readOwn", "profile"),getAllCoupon);
+router.post("/coupons",rolehandler.grantAccess("updateOwn", "profile"),upload2.none(),createCoupon);
+router.put("/coupons",rolehandler.grantAccess("updateOwn", "profile"),upload2.none(),updateCouponDetail);
+router.delete("/coupons",rolehandler.grantAccess("deleteOwn", "profile"),deleteCoupon);
+
 module.exports = router;
