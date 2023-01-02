@@ -20,6 +20,7 @@ const { getAllOrders, getOrder, updateOrder, deleteOrder, createOrder } = requir
 const { getAllShipmentDetails, createShipment, updateShipment, getShipment } = require("../controllers/shipment");
 const { getAllSponsors, getSponsorDetail, createSponsorDetail, updateSponsorDetail, deleteSponsorDetail } = require("../controllers/sponsor");
 const { getAllCoupon, getCouponDetail, createCoupon, updateCouponDetail, deleteCoupon } = require("../controllers/coupon");
+const { getRewardRedeemedById, getAllRewardsRedeemed, createRewardRedeemedDetails } = require("../controllers/rewardRedemption");
 const storage = multer.diskStorage(
   {
   destination: function (req, file, cb) {
@@ -151,4 +152,9 @@ router.post("/coupons",rolehandler.grantAccess("updateOwn", "profile"),upload2.n
 router.put("/coupons",rolehandler.grantAccess("updateOwn", "profile"),upload2.none(),updateCouponDetail);
 router.delete("/coupons",rolehandler.grantAccess("deleteOwn", "profile"),deleteCoupon);
 
+//reward redemption api
+
+router.get("/rewards",rolehandler.grantAccess("readOwn", "profile"),getRewardRedeemedById)
+router.get("/rewards",rolehandler.grantAccess("readOwn", "profile"),getAllRewardsRedeemed)
+router.post("/rewards",rolehandler.grantAccess("updateOwn", "profile"),upload2.none(),createRewardRedeemedDetails)
 module.exports = router;
