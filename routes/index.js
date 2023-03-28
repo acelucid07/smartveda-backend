@@ -20,6 +20,7 @@ const { getAllOrders, getOrder, updateOrder, deleteOrder, createOrder } = requir
 const { getAllShipmentDetails, createShipment, updateShipment, getShipment } = require("../controllers/shipment");
 const { getAllSponsors, getSponsorDetail, createSponsorDetail, updateSponsorDetail, deleteSponsorDetail } = require("../controllers/sponsor");
 const { getAllCoupon, getCouponDetail, createCoupon, updateCouponDetail, deleteCoupon } = require("../controllers/coupon");
+const { getAllUserPermission, getUserPermission, createUserPermission, updateUserPermission, deleteUserPermission} = require("../controllers/accessPermission")
 const storage = multer.diskStorage(
   {
   destination: function (req, file, cb) {
@@ -151,4 +152,10 @@ router.post("/coupons",rolehandler.grantAccess("updateOwn", "profile"),upload2.n
 router.put("/coupons",rolehandler.grantAccess("updateOwn", "profile"),upload2.none(),updateCouponDetail);
 router.delete("/coupons",rolehandler.grantAccess("deleteOwn", "profile"),deleteCoupon);
 
+//module permission table api
+router.get("/modulepermission", rolehandler.grantAccess("readOwn", "profile"),getUserPermission);
+router.get("/modulepermission",getAllUserPermission);
+router.post("/modulepermission",rolehandler.grantAccess("updateOwn", "profile"),createUserPermission)
+router.put("/modulepermission",rolehandler.grantAccess("updateOwn", "profile"),updateUserPermission);
+router.delete("/modulepermission",rolehandler.grantAccess("deleteOwn", "profile"),deleteUserPermission);
 module.exports = router;
