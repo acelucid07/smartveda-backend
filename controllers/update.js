@@ -84,6 +84,27 @@ exports.find = (req, res) => {
     });
 };
 
+/* Find User */
+exports.userfind = (req, res) => {
+  let username = req.query.username;
+  User.find({username:username})
+    .exec(function (err, data) {
+      data[0].image=process.env.bucket_path + data[0].image;
+      if (err) {
+        console.log(err);
+        console.log("error returned");
+        res.send(500, { error: "Failed to fetch user details" });
+      }
+
+      if (!data) {
+        res.status(403).send({ error: " Failed" });
+      }
+
+      res.status(200).send(data);
+      console.log("Data Fetched",data[0]);
+    });
+};
+
 /* Update User */
 exports.update = (req, res, next) => {
   let { email } = req.body;
@@ -161,6 +182,18 @@ exports.findall = (req, res, next) => {
     .skip(query.skip)
     .sort([[sortBy, query.OrderBy]])
     .then((users) => {
+      res.status(200).send({ message: "Users Fetched", data: users });
+    })
+    .catch((err) => {
+      res.status(500).send(err);
+    });
+};
+
+exports.findallusers = (req, res, next) => {
+  User.find({username:{ $ne:'vipin' }}).then((users) => {
+    users.map((item) => {
+      item.image = process.env.bucket_path + item.image;
+    });
       res.status(200).send({ message: "Users Fetched", data: users });
     })
     .catch((err) => {

@@ -43,6 +43,9 @@ let userSchema = new Schema(
     otp: {
       type: String,
     },
+    image: {
+      type: String
+    },
     address: {
       shippingAddress: {
         pincode: {

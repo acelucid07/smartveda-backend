@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const { signup, login, logout } = require("../controllers/Authentication/user");
+const { signup, updatesignup, login, logout, deleteUser } = require("../controllers/Authentication/user");
 const { forgot, resetPassword } = require("../controllers/forgot");
-const { create, update, findall, find } = require("../controllers/update");
+const { create, update, findall, find, userfind, findallusers } = require("../controllers/update");
 const { del, delall } = require("../controllers/status");
 const rolehandler = require("../controllers/rolehandler");
 const { otpsignup, verifyotp, otplogout } = require("../controllers/otp");
@@ -38,7 +38,9 @@ const upload2 = multer({
 });
 
 
-router.post("/signup", signup);
+router.post("/signup",upload2.single("image"), signup);
+router.put("/signup",upload2.single("image"),updatesignup);
+router.delete("/signup",deleteUser);
 router.post("/login", login);
 router.post("/adminlogin", adminLogin);
 router.post("/logout", logout);
@@ -84,7 +86,9 @@ router.put(
 );
 router.put("/delete/:id", rolehandler.grantAccess("deleteOwn", "profile"), del);
 router.get("/users", rolehandler.grantAccess("readAny", "profile"), findall);
+router.get("/registeredusers", rolehandler.grantAccess("readAny", "profile"), findallusers);
 router.get("/user/:id", find);
+router.get("/user", userfind);
 router.put(
   "/deleteall",
   rolehandler.grantAccess("deleteAny", "profile"),
