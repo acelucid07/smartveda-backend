@@ -87,22 +87,21 @@ exports.find = (req, res) => {
 /* Find User */
 exports.userfind = (req, res) => {
   let username = req.query.username;
-  User.find({username:username})
-    .exec(function (err, data) {
-      data[0].image=process.env.bucket_path + data[0].image;
-      if (err) {
-        console.log(err);
-        console.log("error returned");
-        res.send(500, { error: "Failed to fetch user details" });
-      }
-
-      if (!data) {
-        res.status(403).send({ error: " Failed" });
-      }
-
-      res.status(200).send(data);
-      console.log("Data Fetched",data[0]);
+  console.log(username)
+  User.find({username:username}).then((response) => {
+    if (response) {
+      console.log(response)
+      
+      response[0].image?response[0].image=process.env.bucket_path + response[0].image:null;
+          res.status(200).send(response);
+    }
+  })
+  .catch((err) => {
+    res.status(500).json({
+      errors: [{ error: "Failed to fetch user details" }],
     });
+    console.log(err);
+  }); 
 };
 
 /* Update User */
@@ -190,8 +189,9 @@ exports.findall = (req, res, next) => {
 };
 
 exports.findallusers = (req, res, next) => {
-  User.find({username:{ $ne:'vipin' }}).then((users) => {
+  User.find({role:{ $ne:'superAdmin' }}).then((users) => {
     users.map((item) => {
+      if(item.image)
       item.image = process.env.bucket_path + item.image;
     });
       res.status(200).send({ message: "Users Fetched", data: users });

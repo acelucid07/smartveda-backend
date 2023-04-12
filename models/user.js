@@ -15,6 +15,10 @@ let userSchema = new Schema(
 
       minlength: 8,
     },
+    modulePermission:{
+      type:Boolean,
+      default:false
+    },
     role: {
       type: String,
       default: "user",
@@ -22,6 +26,7 @@ let userSchema = new Schema(
     },
     username: {
     type:String,
+    unique: true,
     },
     status: {
       type: Boolean,
@@ -46,6 +51,9 @@ let userSchema = new Schema(
     image: {
       type: String
     },
+    // moduleAssigned: {
+    //   type: Boolean
+    // },
     address: {
       shippingAddress: {
         pincode: {

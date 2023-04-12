@@ -4,19 +4,13 @@ const emailRegxp =
   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 const jwt = require("jsonwebtoken");
 const bucket = require("../../mediacontrol");
-const Permission=require("../../models/modulePermission")
+const Permission = require("../../models/modulePermission")
 
 exports.signup = (req, res, next) => {
-  let { email, password,username,
-    phone,
-    role} = req.body;
-    let users
-    console.log(email,password,username,phone,role)
-    console.log(req.file)
-    // res.status(200).json({
-    //                   success: true,
-                  
-    //                 });
+  let { email, password, username, phone, role } = req.body;
+  let users
+  console.log(email, password, username, phone, role)
+  console.log(req.file)
   let errors = [];
   if (!email) {
     errors.push("email required");
@@ -36,16 +30,16 @@ exports.signup = (req, res, next) => {
         return res
           .status(422)
           .json({ errors: [{ user: "email already exists" }] });
-      } 
-      else if(req.file){
-          bucket.imageUpload(req.file).then(() => {
+      }
+      else if (req.file) {
+        bucket.imageUpload(req.file).then(() => {
           users = new User({
             email: email,
             password: password,
-            username:username,
-            phone:phone,
-            role:role,
-            image:req.file.originalname
+            username: username,
+            phone: phone,
+            role: role,
+            image: req.file.originalname
           });
           const token = jwt.sign(
             { userId: users._id },
@@ -56,7 +50,48 @@ exports.signup = (req, res, next) => {
           );
           users.token = token;
           // save user token
-          
+
+          bcrypt.genSalt(10, function (err, salt) {
+            bcrypt.hash(password, salt, function (err, hash) {
+              if (err) throw err;
+              users.password = hash;
+              users
+                .save()
+                .then((response) => {
+                  bucket.listfiles();
+                  res.status(200).json({
+                    success: true,
+                    result: response,
+                    token,
+                  });
+                })
+                .catch((err) => {
+                  res.status(500).json({
+                    errors: [{ error: err }],
+                  });
+                });
+            });
+          });
+        });
+      }
+      else {
+        users = new User({
+          email: email,
+          password: password,
+          username: username,
+          phone: phone,
+          role: role
+        });
+        const token = jwt.sign(
+          { userId: users._id },
+          process.env.TOKEN,
+          {
+            expiresIn: "1d",
+          }
+        );
+        users.token = token;
+        // save user token
+
         bcrypt.genSalt(10, function (err, salt) {
           bcrypt.hash(password, salt, function (err, hash) {
             if (err) throw err;
@@ -78,48 +113,6 @@ exports.signup = (req, res, next) => {
               });
           });
         });
-        });
-      }
-      else{
-        users = new User({
-          email: email,
-          password: password,
-          username:username,
-          phone:phone,
-          role:role,
-          image:req.file.originalname
-        });
-        const token = jwt.sign(
-          { userId: users._id },
-          process.env.TOKEN,
-          {
-            expiresIn: "1d",
-          }
-        );
-        users.token = token;
-        // save user token
-        
-      bcrypt.genSalt(10, function (err, salt) {
-        bcrypt.hash(password, salt, function (err, hash) {
-          if (err) throw err;
-          users.password = hash;
-          users
-            .save()
-            .then((response) => {
-              bucket.listfiles();
-              res.status(200).json({
-                success: true,
-                result: response,
-                token,
-              });
-            })
-            .catch((err) => {
-              res.status(500).json({
-                errors: [{ error: err }],
-              });
-            });
-        });
-      });
       }
     })
     .catch((err) => {
@@ -130,34 +123,102 @@ exports.signup = (req, res, next) => {
     });
 };
 
-exports.updatesignup=(req,res,next)=>{
-  let { username, email, phone, role, prevImgName } = req.body;
-  let image
-  let Data
-  bucket.listfiles()
+exports.updatesignup = (req, res, next) => {
+  // bucket.listfiles();
+  // bucket.imageDelete('pexels-beach.jpg').then((returned)=>{
+         
+  //   console.log(returned)
+  //   if (returned) res.status(200).send(returned);
+  //  })
+  let { username, email, phone, role, prevImgName, password } = req.body;
+  let image;
+  let newUsername;
+  console.log(req.body)
+  let Data = {}
+  // bucket.listfiles()
   // bucket.imageDelete('sunsetatrussia.jpg')
   // console.log(req.body)
   let check = new Promise((resolve, reject) => {
+
     if (req.file) {
       bucket.imageUpload(req.file).then(() => {
         image = req.file.originalname;
-        Data={username:username,phone:phone,role:role,image:image}
-        bucket.imageDelete(prevImgName).then(()=>{resolve(true)});
-        
+        Object.assign(Data, { username: username, phone: phone, role: role, image: image })
+        // console.log(Data)
+        if (prevImgName) {
+          bucket.imageDelete(prevImgName).then(() => {
+            if (password) {
+              bcrypt.genSalt(10, function (err, salt) {
+                bcrypt.hash(password, salt, function (err, hash) {
+                  if (err) throw err;
+                  Object.assign(Data, { password: hash })
+                  // console.log(Data)
+                  resolve(true)
+                });
+              });
+            }
+            else{resolve(true)}
+          });
+        }
+        else { resolve(true) }
       });
-    } else {
-      Data={username:username,phone:phone,role:role}
-      resolve(true);
+    }
+    else {
+      Object.assign(Data, { username: username, phone: phone, role: role })
+      // console.log(Data)
+      if (password) {
+        bcrypt.genSalt(10, function (err, salt) {
+          bcrypt.hash(password, salt, function (err, hash) {
+            if (err) throw err;
+            Object.assign(Data, { password: hash })
+            resolve(true);
+            // console.log(Data)
+          });
+        });
+      }
+      else {
+        resolve(true);
+      }
     }
   });
-  check.then((result) => {
+  let usernameCheck = new Promise((resolve, reject) => {
+    User.find({ email: email }).then((respRecieved) => {
+      oldUsername = respRecieved[0].username
+      if (oldUsername != username) {
+        if (respRecieved[0].modulePermission) {
+          Permission.findOneAndUpdate({ username: oldUsername }, { username: username }, { new: true }).then((response2) => {
+            if (response2) {
+              // res.status(200).send(response2);
+              // console.log(response2)
+              Object.assign(Data, { username: username })
+              resolve(true)
+            }
+          })
+            .catch((err) => {
+              res.status(500).json({
+                errors: [{ error: "Something went wrong while checking for username" }],
+              });
+              console.log(err);
+            });
+        }
+        else {
+          resolve(true)
+        }
+      }
+      else {
+        resolve(true)
+      }
+    })
+  })
+
+  Promise.all([check, usernameCheck]).then((result) => {
     if (result) {
-      console.log(Data,email);
-     User.findOneAndUpdate({email:email}, Data, { new: true })
+      console.log(Data);
+      User.findOneAndUpdate({ email: email }, Data, { new: true })
         .then((response2) => {
           if (response2) {
             res.status(200).send(response2);
-            console.log(response2)
+            // console.log(response2)
           }
         })
         .catch((err) => {
@@ -168,7 +229,6 @@ exports.updatesignup=(req,res,next)=>{
         });
     }
   });
-
 }
 
 exports.login = (req, res, next) => {
