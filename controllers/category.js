@@ -42,10 +42,8 @@ exports.updateCategory = (req, res, next) => {
   let Data = JSON.parse(req.body.Data);
   let check = new Promise((resolve, reject) => {
     if (Object.keys(Data).includes("image")) {
-      bucket.imageUpload(req.file).then(() => {
         Data.image = req.file.originalname;
         resolve(true);
-      });
     } else {
       resolve(true);
     }

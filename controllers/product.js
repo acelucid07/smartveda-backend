@@ -44,18 +44,15 @@ exports.createProduct = (req, res, next) => {
   let resultdata = "";
   let resultvideodata = "";
   let check = new Promise((resolve, reject) => {
-      bucket.imageUpload(req.files.image[0]).then((returned) => {
-        resultdata = returned;
         bucket.videoUpload(req.files.video[0]).then((ret) => {
           resultvideodata = ret;
-          if (!!resultdata && !!resultvideodata) {
-            console.log([resultdata, resultvideodata]);
+          if (!!resultvideodata) {
+            // console.log([resultdata, resultvideodata]);
             Data.images = req.files.image[0].originalname;
             Data.videos = req.files.video[0].originalname;
           }
           resolve(true);
         });
-      });
   });
   check.then((result) => {
     if (result) {
@@ -89,25 +86,20 @@ exports.updateProduct = (req, res, next) => {
       Object.keys(Data).includes("videos") &&
       Object.keys(Data).includes("images")
     ) {
-      bucket.imageUpload(req.files.image[0]).then((returned) => {
-        resultdata = returned;
         bucket.videoUpload(req.files.video[0]).then((ret) => {
           resultvideodata = ret;
-          if (!!resultdata && !!resultvideodata) {
-            console.log([resultdata, resultvideodata]);
+          if (!!resultvideodata) {
+            // console.log([resultdata, resultvideodata]);
             Data.images = req.files.image[0].originalname;
             Data.videos = req.files.video[0].originalname;
           }
           resolve(true);
         });
-      });
     }
     else if(Object.keys(Data).includes("images"))
     {
-      bucket.imageUpload(req.files.image[0]).then(()=> {
         Data.images = req.files.image[0].originalname;
         resolve(true);
-      })  
     }
     else if(Object.keys(Data).includes("videos"))
     {

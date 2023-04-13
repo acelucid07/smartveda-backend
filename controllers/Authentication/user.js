@@ -32,7 +32,6 @@ exports.signup = (req, res, next) => {
           .json({ errors: [{ user: "email already exists" }] });
       }
       else if (req.file) {
-        bucket.imageUpload(req.file).then(() => {
           users = new User({
             email: email,
             password: password,
@@ -72,7 +71,6 @@ exports.signup = (req, res, next) => {
                 });
             });
           });
-        });
       }
       else {
         users = new User({
@@ -141,7 +139,6 @@ exports.updatesignup = (req, res, next) => {
   let check = new Promise((resolve, reject) => {
 
     if (req.file) {
-      bucket.imageUpload(req.file).then(() => {
         image = req.file.originalname;
         Object.assign(Data, { username: username, phone: phone, role: role, image: image })
         // console.log(Data)
@@ -161,7 +158,6 @@ exports.updatesignup = (req, res, next) => {
           });
         }
         else { resolve(true) }
-      });
     }
     else {
       Object.assign(Data, { username: username, phone: phone, role: role })

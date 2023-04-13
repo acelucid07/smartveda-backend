@@ -21,21 +21,47 @@ const { getAllShipmentDetails, createShipment, updateShipment, getShipment } = r
 const { getAllSponsors, getSponsorDetail, createSponsorDetail, updateSponsorDetail, deleteSponsorDetail } = require("../controllers/sponsor");
 const { getAllCoupon, getCouponDetail, createCoupon, updateCouponDetail, deleteCoupon } = require("../controllers/coupon");
 const { getAllUserPermission, getUserPermission, createUserPermission, updateUserPermission, deleteUserPermission} = require("../controllers/accessPermission")
-const storage = multer.diskStorage(
-  {
-  destination: function (req, file, cb) {
-      cb(null, "uploads/");
-  },
-  filename: function (req, file, cb) {
-      let ext = path.extname(file.originalname);
-      cb(null, Date.now() + ext);
-  },
-}
-);
+const { S3Client } = require('@aws-sdk/client-s3')
+const multerS3 = require('multer-s3')
+
+// const storage = multer.diskStorage(
+//   {
+//   // destination: function (req, file, cb) {
+//   //     cb(null, "uploads/");
+//   // },
+//   filename: function (req, file, cb) {
+//       let ext = path.extname(file.originalname);
+//       cb(null, Date.now() + ext);
+//   },
+// }
+// );
+// const upload2 = multer({
+//   storage: storage,
+// });
+const s3 = new S3Client({
+  credentials: {
+    accessKeyId: process.env.AWS_S3_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY,
+},
+region: "us-east-1"}
+)
+
+const s3Storage = multerS3({
+    s3: s3,
+    bucket: process.env.AWS_S3_BUCKET_NAME,
+    contentType: multerS3.AUTO_CONTENT_TYPE,
+    metadata: function (req, file, cb) {
+      cb(null, {fieldName: file.fieldname});
+    },
+    key: function (req, file, cb) {
+      cb(null,file.originalname)
+    }
+  })
+
 
 const upload2 = multer({
-  storage: storage,
-});
+  storage: s3Storage
+})
 
 
 router.post("/signup",upload2.single("image"), signup);
